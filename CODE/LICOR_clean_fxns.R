@@ -15,19 +15,22 @@ MegaFrame <- function(){
     
     #puts meta data in a column
     meta<- dat[1,1]
-    #stores the dat in which this file was created
-    dat$meta <- meta 
     
     ## renames columns using by finding "obs"
     names(dat)<- as.character(unlist(dat[min(which(dat[,1] == "Obs")),])) 
     
+    #stores the dat in which this file was created
+    dat$meta <- meta 
+    
     ### some irgas have Mch columns, this removes those
     dat <-dat[,-(which(grepl("Mch",names(dat))))]
+    
+    #ls<- append(ls, names(dat)) #### this diagnoses if there are different number of columns
     
     #binds data frames together
     outDF<- rbind(outDF, dat)
   }
-  
+  return(outDF)
 }
 
 ## this function gets rid of rows that aren't necessary
@@ -65,5 +68,7 @@ LC<-function(dat){
   #makes all numbers numeric and non numbers NAs
   dat[,1]<-as.numeric(as.character(unlist(dat[,1])))
   
+  #converts numeric columns into numeric
+  dat[,5:81] <- lapply(dat[,5:81], as.numeric)
   return(dat)
 }
